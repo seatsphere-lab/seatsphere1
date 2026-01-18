@@ -28,6 +28,7 @@
       color:var(--text);
     }
 
+    /* Header */
     .topbar{
       height:56px;
       background:#fff;
@@ -38,7 +39,16 @@
       padding:0 22px;
     }
     .brand{ font-weight:800; font-size:20px; color:#4b5563; }
+    .topbar-right{
+      display:flex; gap:16px; font-size:13px; color:#4b5563;
+    }
+    .pill{
+      display:flex; align-items:center; gap:6px;
+      padding:6px 8px; border-radius:8px; cursor:pointer;
+    }
+    .pill:hover{ background:#f3f4f6; }
 
+    /* Layout */
     .wrap{
       max-width:1120px;
       margin:18px auto 60px;
@@ -50,6 +60,7 @@
       display:grid;
       grid-template-columns:1fr 360px;
       gap:22px;
+      align-items:start;
     }
 
     .card{
@@ -60,14 +71,60 @@
       overflow:hidden;
     }
 
+    /* Carousel */
+    .carousel{
+      height:280px;
+      background:#ddd;
+      position:relative;
+    }
+    .slide{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:700;
+      background:linear-gradient(135deg,#4b5563,#111827);
+      opacity:0; transition:.25s;
+    }
+    .slide.active{ opacity:1; }
+
+    .nav-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:34px; height:34px; border:none;
+      border-radius:999px; background:rgba(0,0,0,.35);
+      color:#fff; cursor:pointer;
+    }
+    .nav-btn.left{ left:14px; }
+    .nav-btn.right{ right:14px; }
+
+    .dots{
+      position:absolute; bottom:14px; left:50%;
+      transform:translateX(-50%);
+      display:flex; gap:8px;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background:rgba(255,255,255,.5); border:none;
+    }
+    .dot.active{ background:#fff; }
+
     .event-body{ padding:18px; }
 
+    .seat-line{ font-weight:700; margin-top:10px; }
+
+    /* Summary */
     .summary{
       background:#fff;
       border:1px solid var(--border);
       border-radius:12px;
       box-shadow:var(--shadow);
       overflow:hidden;
+    }
+
+    .urgency{
+      background:#ffe4e6;
+      color:#9f1239;
+      padding:10px 12px;
+      font-size:12.5px;
+      font-weight:600;
     }
 
     .summary-body{ padding:14px; }
@@ -82,7 +139,7 @@
 
     .btn{
       width:100%;
-      margin-top:10px;
+      margin-top:8px;
       padding:12px;
       border:none;
       border-radius:8px;
@@ -91,7 +148,6 @@
       font-weight:800;
       cursor:pointer;
     }
-
     .btn:hover{ background:var(--purple-dark); }
 
     /* CTA proximity nudge */
@@ -99,8 +155,7 @@
       font-size:12.5px;
       color:var(--danger);
       font-weight:600;
-      margin-top:8px;
-      margin-bottom:6px;
+      margin:10px 0 6px;
     }
 
     /* SAFETY MODULE */
@@ -115,13 +170,9 @@
       overflow:hidden;
     }
 
-    .safety-accent{
-      background:#f59e0b; /* amber */
-    }
+    .safety-accent{ background:#f59e0b; }
 
-    .safety-body{
-      padding:14px 14px 16px;
-    }
+    .safety-body{ padding:14px 14px 16px; }
 
     .safety-title{
       font-weight:900;
@@ -139,28 +190,23 @@
       padding-left:18px;
       font-size:13px;
       line-height:1.45;
-      margin:0 0 10px;
     }
-
     .bullets li{ margin:8px 0; }
 
     .s-links a{
       display:block;
       font-size:13px;
       color:var(--link);
-      text-decoration:none;
       margin-top:6px;
+      text-decoration:none;
     }
 
-    .s-links a:hover{ text-decoration:underline; }
-
-    /* One-time attention pulse */
+    /* Pulse */
     @keyframes subtlePulse {
-      0% { box-shadow:0 0 0 rgba(245,158,11,0); }
-      50% { box-shadow:0 0 0 4px rgba(245,158,11,.25); }
-      100% { box-shadow:0 0 0 rgba(245,158,11,0); }
+      0%{ box-shadow:0 0 0 rgba(245,158,11,0); }
+      50%{ box-shadow:0 0 0 4px rgba(245,158,11,.25); }
+      100%{ box-shadow:0 0 0 rgba(245,158,11,0); }
     }
-
     .safety.attention{
       animation:subtlePulse 1.4s ease-out 1;
     }
@@ -174,22 +220,44 @@
 <body>
   <div class="topbar">
     <div class="brand">SeatSphere</div>
+    <div class="topbar-right">
+      <div class="pill">09:38</div>
+      <div class="pill">USD · EN</div>
+    </div>
   </div>
 
   <div class="wrap">
     <h1>Checkout</h1>
 
     <div class="grid">
+      <!-- LEFT -->
       <div class="card">
+        <div class="carousel">
+          <div class="slide active">Columbus Arena View 1</div>
+          <div class="slide">Columbus Arena View 2</div>
+          <button class="nav-btn left">‹</button>
+          <button class="nav-btn right">›</button>
+          <div class="dots">
+            <button class="dot active"></button>
+            <button class="dot"></button>
+          </div>
+        </div>
+
         <div class="event-body">
           <strong>John Doe Live</strong><br/>
           Sat Aug 09 • 7:30 PM<br/>
-          Columbus Arena
+          Columbus Arena<br/>
+          <div class="seat-line">Section 125 • Row 13 • 1 ticket</div>
         </div>
       </div>
 
+      <!-- RIGHT -->
       <div>
         <div class="summary">
+          <div class="urgency">
+            Last tickets remaining in Section 125
+          </div>
+
           <div class="summary-body">
             <div class="row">
               <span>Ticket × 1</span>
@@ -209,54 +277,50 @@
           </div>
         </div>
 
-        <!-- SAFETY NOTICE -->
-        <div class="safety" aria-label="SeatSphere Important Notice">
+        <!-- SAFETY -->
+        <div class="safety">
           <div class="safety-accent"></div>
           <div class="safety-body">
             <div class="safety-title">⚠️ Important SeatSphere Notice</div>
-
             <p class="safety-head">
               Scams and impersonation attempts have increased on ticket marketplaces.
             </p>
-
             <ul class="bullets">
-              <li>Even careful buyers may occasionally encounter fraudulent listings.</li>
-              <li>SeatSphere actively monitors suspicious activity across the platform.</li>
-              <li>Reporting unexpected issues helps protect you and other customers.</li>
-              <li>SeatSphere is working with law enforcement to address reported incidents.</li>
+              <li>Even careful buyers may encounter fraudulent listings.</li>
+              <li>SeatSphere actively monitors suspicious activity.</li>
+              <li>Reporting issues helps protect you and others.</li>
+              <li>SeatSphere works with law enforcement on reported cases.</li>
             </ul>
-
             <div class="s-links">
               <a href="#">Learn how SeatSphere protects buyers</a>
               <a href="#">Report suspicious activity</a>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
   <script>
-    // one-time attention cue
     window.addEventListener('load', () => {
-      const safety = document.querySelector('.safety');
-      if (safety) safety.classList.add('attention');
+      document.querySelector('.safety')?.classList.add('attention');
     });
 
-    // inert confirm feedback
-    const btn = document.getElementById('confirmBtn');
-    btn.addEventListener('click', e => {
+    document.getElementById('confirmBtn').addEventListener('click', e => {
       e.preventDefault();
-      btn.textContent = 'Confirmed';
-      btn.disabled = true;
-      btn.style.background = '#16a34a';
-      setTimeout(() => {
-        btn.textContent = 'Confirm Order';
-        btn.disabled = false;
-        btn.style.background = '';
-      }, 1400);
+      const b = e.target;
+      b.textContent = 'Confirmed';
+      b.disabled = true;
+      b.style.background = '#16a34a';
+      setTimeout(()=>{
+        b.textContent='Confirm Order';
+        b.disabled=false;
+        b.style.background='';
+      },1400);
     });
   </script>
 </body>
 </html>
+
 
