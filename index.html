@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SeatSphere — Checkout</title>
-
   <style>
     :root{
       --bg:#f6f7f9;
@@ -15,15 +14,16 @@
       --shadow:0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.1);
       --purple:#6d28d9;
       --purple-dark:#5b21b6;
-      --danger-bg:#fff7ed;
-      --danger:#92400e;
+      --danger-bg:#ffe8ea;
+      --danger:#b42318;
       --link:#6d28d9;
+      --green:#027a48;
     }
 
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background:var(--bg);
       color:var(--text);
     }
@@ -38,15 +38,38 @@
       justify-content:space-between;
       padding:0 22px;
     }
-    .brand{ font-weight:800; font-size:20px; color:#4b5563; }
+    .brand{
+      font-weight:800;
+      letter-spacing:.2px;
+      color:#4b5563; /* dark grey logo text */
+      font-size:20px;
+    }
     .topbar-right{
-      display:flex; gap:16px; font-size:13px; color:#4b5563;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      color:#4b5563;
+      font-size:13px;
     }
     .pill{
-      display:flex; align-items:center; gap:6px;
-      padding:6px 8px; border-radius:8px; cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      padding:6px 8px;
+      border-radius:8px;
     }
     .pill:hover{ background:#f3f4f6; }
+    .caret{
+      width:0;height:0;
+      border-left:4px solid transparent;
+      border-right:4px solid transparent;
+      border-top:5px solid #6b7280;
+      margin-left:2px;
+    }
+    .clock{
+      width:16px;height:16px; display:inline-block;
+    }
 
     /* Layout */
     .wrap{
@@ -54,175 +77,339 @@
       margin:18px auto 60px;
       padding:0 18px;
     }
-    h1{ font-size:34px; margin:18px 0; }
-
+    h1{
+      margin:18px 0 18px;
+      font-size:34px;
+      letter-spacing:-.02em;
+    }
     .grid{
       display:grid;
-      grid-template-columns:1fr 360px;
+      grid-template-columns: 1fr 360px;
       gap:22px;
       align-items:start;
     }
 
+    /* Left Card */
     .card{
-      background:#fff;
+      background:var(--card);
       border:1px solid var(--border);
       border-radius:12px;
       box-shadow:var(--shadow);
       overflow:hidden;
     }
 
-    /* Carousel */
     .carousel{
+      position:relative;
       height:280px;
       background:#ddd;
-      position:relative;
+      overflow:hidden;
     }
     .slide{
       position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; font-weight:700;
-      background:linear-gradient(135deg,#4b5563,#111827);
-      opacity:0; transition:.25s;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:#fff;
+      background:linear-gradient(135deg, #4b5563, #111827);
+      opacity:0;
+      transition:opacity .25s ease;
     }
     .slide.active{ opacity:1; }
 
     .nav-btn{
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:34px; height:34px; border:none;
-      border-radius:999px; background:rgba(0,0,0,.35);
-      color:#fff; cursor:pointer;
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:34px;height:34px;
+      border:none;
+      border-radius:999px;
+      background:rgba(17,24,39,.35);
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:background .15s ease, transform .05s ease;
     }
+    .nav-btn:hover{ background:rgba(17,24,39,.55); }
+    .nav-btn:active{ transform:translateY(-50%) scale(.98); }
     .nav-btn.left{ left:14px; }
     .nav-btn.right{ right:14px; }
 
     .dots{
-      position:absolute; bottom:14px; left:50%;
+      position:absolute;
+      left:50%;
+      bottom:14px;
       transform:translateX(-50%);
-      display:flex; gap:8px;
+      display:flex;
+      gap:8px;
     }
     .dot{
-      width:8px; height:8px; border-radius:50%;
-      background:rgba(255,255,255,.5); border:none;
+      width:8px;height:8px;border-radius:999px;
+      background:rgba(255,255,255,.45);
+      cursor:pointer;
+      border:0;
     }
     .dot.active{ background:#fff; }
 
-    .event-body{ padding:18px; }
-
-    .seat-line{ font-weight:700; margin-top:10px; }
-
-    /* Summary */
-    .summary{
-      background:#fff;
-      border:1px solid var(--border);
-      border-radius:12px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
+    .event-body{
+      padding:18px 18px 16px;
+    }
+    .event-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .event-title{
+      font-size:20px;
+      font-weight:800;
+      margin:0 0 4px;
+    }
+    .meta{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.35;
     }
 
+    .thumb{
+      width:54px;height:54px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      overflow:hidden;
+      background:linear-gradient(135deg, #f59e0b, #7c3aed);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight:800;
+      flex:0 0 auto;
+    }
+
+    .badges{
+      display:flex;
+      gap:8px;
+      margin:14px 0 14px;
+      flex-wrap:wrap;
+    }
+    .badge{
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:#fff;
+      color:#111827;
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+    }
+    .badge.red{ background:#fff1f2; border-color:#fecdd3; color:#9f1239; }
+    .badge.gold{ background:#fffbeb; border-color:#fde68a; color:#92400e; }
+
+    .divider{ border-top:1px solid var(--border); margin:12px 0 0; }
+    .seating{
+      padding-top:14px;
+      margin-top:14px;
+    }
+    .seat-line{
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    .clearview{
+      color:var(--link);
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
+      padding:2px 0;
+    }
+    .clearview:hover{ text-decoration:underline; }
+
+    .popular{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:13px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .flame{
+      width:18px;height:18px;border-radius:6px;
+      background:#fff1f2;
+      border:1px solid #fecdd3;
+      display:flex;align-items:center;justify-content:center;
+      color:#be123c;
+      font-size:12px;
+      flex:0 0 auto;
+    }
+
+    /* Right column */
+    .stack{ display:flex; flex-direction:column; gap:16px; }
+
+    .summary{
+      border-radius:12px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
+      background:#fff;
+    }
     .urgency{
-      background:#ffe4e6;
-      color:#9f1239;
+      background:var(--danger-bg);
+      color:var(--danger);
       padding:10px 12px;
       font-size:12.5px;
+      display:flex;
+      align-items:center;
+      gap:8px;
       font-weight:600;
     }
-
-    .summary-body{ padding:14px; }
-
+    .tri{
+      width:0;height:0;
+      border-left:6px solid transparent;
+      border-right:6px solid transparent;
+      border-bottom:10px solid #f79009;
+      position:relative;
+      top:-1px;
+    }
+    .summary-body{
+      padding:14px 14px 16px;
+    }
+    .summary-title{
+      font-size:16px;
+      font-weight:800;
+      margin:6px 0 12px;
+    }
     .row{
       display:flex;
       justify-content:space-between;
+      align-items:center;
       padding:10px 0;
       border-bottom:1px solid var(--border);
       font-size:13.5px;
     }
+    .row:last-of-type{ border-bottom:none; }
+    .row strong{ font-weight:800; }
+
+    .price-link{
+      display:inline-block;
+      color:var(--link);
+      font-size:12.5px;
+      text-decoration:none;
+      margin:10px 0 10px;
+      cursor:pointer;
+    }
+    .price-link:hover{ text-decoration:underline; }
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:8px 0 6px;
+    }
+    select{
+      width:100%;
+      padding:10px 12px;
+      border:1px solid #d1d5db;
+      border-radius:8px;
+      font-size:14px;
+      background:#fff;
+      cursor:pointer;
+    }
 
     .btn{
       width:100%;
-      margin-top:8px;
-      padding:12px;
+      margin-top:14px;
+      padding:12px 12px;
       border:none;
       border-radius:8px;
       background:var(--purple);
       color:#fff;
       font-weight:800;
       cursor:pointer;
+      transition:background .15s ease, transform .05s ease;
     }
     .btn:hover{ background:var(--purple-dark); }
+    .btn:active{ transform:translateY(1px); }
 
-    /* CTA proximity nudge */
-    .cta-warning{
-      font-size:12.5px;
-      color:var(--danger);
-      font-weight:600;
-      margin:10px 0 6px;
-    }
-
-    /* SAFETY MODULE */
+    /* Safety module */
     .safety{
-      margin-top:16px;
       background:#fff;
       border:1px solid var(--border);
       border-radius:12px;
       box-shadow:var(--shadow);
-      display:grid;
-      grid-template-columns:4px 1fr;
       overflow:hidden;
+      display:grid;
+      grid-template-columns: 4px 1fr;
     }
-
-    .safety-accent{ background:#f59e0b; }
-
-    .safety-body{ padding:14px 14px 16px; }
-
+  .safety-accent{
+  background:#f59e0b; /* amber = caution */
+    }
+    .safety-body{
+      padding:14px 14px 16px;
+    }
     .safety-title{
       font-weight:900;
-      margin:0 0 8px;
-      color:#92400e;
+      margin:4px 0 8px;
+      color:#065f46;
     }
-
     .safety-head{
       font-weight:700;
+      color:#111827;
       margin:0 0 10px;
       font-size:13.5px;
     }
-
     .bullets{
+      margin:0 0 10px 0;
       padding-left:18px;
+      color:#374151;
       font-size:13px;
       line-height:1.45;
     }
     .bullets li{ margin:8px 0; }
-
+    .s-links{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top:10px;
+    }
     .s-links a{
-      display:block;
-      font-size:13px;
       color:var(--link);
-      margin-top:6px;
       text-decoration:none;
+      font-size:13px;
+      cursor:pointer;
+      width:max-content;
     }
+    .s-links a:hover{ text-decoration:underline; }
 
-    /* Pulse */
-    @keyframes subtlePulse {
-      0%{ box-shadow:0 0 0 rgba(245,158,11,0); }
-      50%{ box-shadow:0 0 0 4px rgba(245,158,11,.25); }
-      100%{ box-shadow:0 0 0 rgba(245,158,11,0); }
-    }
-    .safety.attention{
-      animation:subtlePulse 1.4s ease-out 1;
-    }
+    /* “Clickable but no navigation” feedback */
+    a, button, select, .pill { -webkit-tap-highlight-color: transparent; }
+    .clickflash{ animation: flash .12s ease; }
+    @keyframes flash { from{ filter:brightness(1);} to{ filter:brightness(.92);} }
 
-    @media(max-width:980px){
+    /* Responsive */
+    @media (max-width: 980px){
       .grid{ grid-template-columns:1fr; }
     }
   </style>
 </head>
-
 <body>
   <div class="topbar">
     <div class="brand">SeatSphere</div>
     <div class="topbar-right">
-      <div class="pill">09:38</div>
-      <div class="pill">USD · EN</div>
+      <div class="pill" id="timePill" role="button" aria-label="Time">
+        <svg class="clock" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="#6b7280" stroke-width="2"></circle>
+          <path d="M12 7v6l4 2" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>09:38</span>
+      </div>
+      <div class="pill" id="langPill" role="button" aria-label="Currency and language">
+        <span>USD</span>
+        <span>EN</span>
+        <span class="caret" aria-hidden="true"></span>
+      </div>
     </div>
   </div>
 
@@ -232,93 +419,172 @@
     <div class="grid">
       <!-- LEFT -->
       <div class="card">
-        <div class="carousel">
-          <div class="slide active">Columbus Arena View 1</div>
-          <div class="slide">Columbus Arena View 2</div>
-          <button class="nav-btn left">‹</button>
-          <button class="nav-btn right">›</button>
-          <div class="dots">
-            <button class="dot active"></button>
-            <button class="dot"></button>
+        <div class="carousel" aria-label="Event image carousel">
+          <div class="slide active" data-i="0">Columbus Arena View 1</div>
+          <div class="slide" data-i="1" style="background:linear-gradient(135deg,#10b981,#064e3b)">Columbus Arena View 2</div>
+          <div class="slide" data-i="2" style="background:linear-gradient(135deg,#f59e0b,#7c2d12)">Columbus Arena View 3</div>
+
+          <button class="nav-btn left" id="prevBtn" aria-label="Previous image">‹</button>
+          <button class="nav-btn right" id="nextBtn" aria-label="Next image">›</button>
+
+          <div class="dots" aria-label="Carousel dots">
+            <button class="dot active" data-dot="0" aria-label="Image 1"></button>
+            <button class="dot" data-dot="1" aria-label="Image 2"></button>
+            <button class="dot" data-dot="2" aria-label="Image 3"></button>
           </div>
         </div>
 
         <div class="event-body">
-          <strong>John Doe Live</strong><br/>
-          Sat Aug 09 • 7:30 PM<br/>
-          Columbus Arena<br/>
-          <div class="seat-line">Section 125 • Row 13 • 1 ticket</div>
+          <div class="event-row">
+            <div>
+              <p class="event-title">John Doe Live</p>
+              <div class="meta">
+                Sat Aug 09 • 7:30 PM<br/>
+                Columbus Arena<br/>
+                Columbus, Ohio, USA
+              </div>
+            </div>
+            <div class="thumb" title="Artist thumbnail">JD</div>
+          </div>
+
+          <div class="badges">
+            <span class="badge red">🔥 <span>High demand</span></span>
+            <span class="badge gold">🏆 <span>Award winning artist</span></span>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="seating">
+            <div class="seat-line">Section 125 • Row 13 • 1 ticket</div>
+            <a class="clearview" href="#" id="clearViewLink" aria-label="Clear view (no navigation)">👁️ <span>Clear view</span></a>
+            <div class="popular">
+              <div class="flame">🔥</div>
+              <div><strong>Popular pick</strong> • 9 people viewed this event</div>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- RIGHT -->
-      <div>
+      <div class="stack">
         <div class="summary">
           <div class="urgency">
-            Last tickets remaining in Section 125
+            <span class="tri" aria-hidden="true"></span>
+            <span>Last tickets remaining in Row 13 in Section 125</span>
           </div>
 
           <div class="summary-body">
+            <div class="summary-title">Order summary</div>
+
             <div class="row">
               <span>Ticket × 1</span>
               <span>$150</span>
             </div>
 
-            <div class="row" style="border-bottom:none;">
-              <strong>Total</strong>
+            <div class="row" style="border-bottom:none; padding-bottom:2px;">
+              <strong>Total price</strong>
               <strong>$150</strong>
             </div>
 
-            <p class="cta-warning">
-              Please review the notice below before confirming your order.
-            </p>
+            <a href="#" class="price-link" id="priceBreakdown">Price breakdown</a>
+
+            <label for="qty">Quantity</label>
+            <select id="qty">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
 
             <button class="btn" id="confirmBtn">Confirm Order</button>
           </div>
         </div>
 
-        <!-- SAFETY -->
-        <div class="safety">
-          <div class="safety-accent"></div>
+        <div class="safety" aria-label="SeatSphere Safety Notice">
+          <div class="safety-accent" aria-hidden="true"></div>
           <div class="safety-body">
             <div class="safety-title">⚠️ Important SeatSphere Notice</div>
-            <p class="safety-head">
-              Scams and impersonation attempts have increased on ticket marketplaces.
-            </p>
+<p class="safety-head">
+  Scams and impersonation attempts have increased on ticket marketplaces.
+</p>
             <ul class="bullets">
-              <li>Even careful buyers may encounter fraudulent listings.</li>
-              <li>SeatSphere actively monitors suspicious activity.</li>
-              <li>Reporting issues helps protect you and others.</li>
-              <li>SeatSphere works with law enforcement on reported cases.</li>
+              <li>Even careful buyers can sometimes encounter scammers or impersonators.</li>
+              <li>Our team actively monitors suspicious activity so you can focus on the event - not the hassle.</li>
+              <li>If something unexpected occurs, reporting it helps protect both you and other customers.</li>
+              <li>We are aware of scams targeting companies like SeatSphere and are actively working with law enforcement to address these incidents.</li>
+
             </ul>
             <div class="s-links">
-              <a href="#">Learn how SeatSphere protects buyers</a>
-              <a href="#">Report suspicious activity</a>
+              <a href="#" id="learnLink">Learn how SeatSphere protects buyers</a>
+              <a href="#" id="reportLink">Report suspicious activity</a>
             </div>
           </div>
         </div>
-
       </div>
+
     </div>
   </div>
 
   <script>
-    window.addEventListener('load', () => {
-      document.querySelector('.safety')?.classList.add('attention');
+    // Prevent navigation; provide subtle click feedback
+    function noNav(e){
+      e.preventDefault();
+      const el = e.currentTarget;
+      el.classList.remove('clickflash');
+      void el.offsetWidth; // restart animation
+      el.classList.add('clickflash');
+    }
+
+    // Carousel
+    const slides = [...document.querySelectorAll('.slide')];
+    const dots = [...document.querySelectorAll('.dot')];
+    let idx = 0;
+
+    function setSlide(i){
+      idx = (i + slides.length) % slides.length;
+      slides.forEach((s, j) => s.classList.toggle('active', j === idx));
+      dots.forEach((d, j) => d.classList.toggle('active', j === idx));
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => setSlide(idx - 1));
+    document.getElementById('nextBtn').addEventListener('click', () => setSlide(idx + 1));
+    dots.forEach(d => d.addEventListener('click', () => setSlide(parseInt(d.dataset.dot, 10))));
+
+    // Make “links” and pills inert
+    ['clearViewLink','priceBreakdown','learnLink','reportLink','timePill','langPill'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.addEventListener('click', noNav);
     });
 
-    document.getElementById('confirmBtn').addEventListener('click', e => {
-      e.preventDefault();
-      const b = e.target;
-      b.textContent = 'Confirmed';
-      b.disabled = true;
-      b.style.background = '#16a34a';
-      setTimeout(()=>{
-        b.textContent='Confirm Order';
-        b.disabled=false;
-        b.style.background='';
-      },1400);
+    // Confirm button: no redirect; just show inline feedback
+    const confirmBtn = document.getElementById('confirmBtn');
+    confirmBtn.addEventListener('click', () => {
+      confirmBtn.classList.remove('clickflash');
+      void confirmBtn.offsetWidth;
+      confirmBtn.classList.add('clickflash');
+      confirmBtn.textContent = 'Confirmed';
+      confirmBtn.disabled = true;
+      confirmBtn.style.background = '#16a34a';
+      confirmBtn.style.cursor = 'default';
+      confirmBtn.style.transform = 'none';
+      setTimeout(() => {
+        confirmBtn.textContent = 'Confirm Order';
+        confirmBtn.disabled = false;
+        confirmBtn.style.background = '';
+        confirmBtn.style.cursor = '';
+      }, 1400);
     });
+
+    // Quantity visual feedback only (no price changes)
+    document.getElementById('qty').addEventListener('change', (e) => {
+      e.target.classList.remove('clickflash');
+      void e.target.offsetWidth;
+      e.target.classList.add('clickflash');
+    });
+
+    // Optional auto-advance like real sites (comment out if you want static)
+    // setInterval(()=>setSlide(idx+1), 6000);
   </script>
 </body>
 </html>
